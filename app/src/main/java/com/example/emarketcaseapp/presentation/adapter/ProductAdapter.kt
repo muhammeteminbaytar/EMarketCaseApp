@@ -1,10 +1,9 @@
 package com.example.emarketcaseapp.presentation.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.emarketcaseapp.R
+import com.example.emarketcaseapp.databinding.ProductItemViewBinding
 import com.example.emarketcaseapp.domain.model.Product
 import javax.inject.Singleton
 
@@ -18,18 +17,21 @@ class ProductAdapter : RecyclerView.Adapter<ProductViewHolder>() {
         notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.product_item_view, parent, false)
-        return ProductViewHolder(view)
+        val binding = ProductItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProductViewHolder(binding)
     }
 
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-
+        holder.bind(items[position])
     }
 
 }
 
-class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    
+class ProductViewHolder(private val binding: ProductItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(product: Product) {
+        binding.productItem = product
+        binding.executePendingBindings()
+    }
 }
