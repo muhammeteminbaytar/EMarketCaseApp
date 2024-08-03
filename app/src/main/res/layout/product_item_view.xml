@@ -10,18 +10,20 @@
             type="com.example.emarketcaseapp.domain.model.Product" />
     </data>
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="180.dp"
+        android:layout_height="250.dp"
+        app:cardCornerRadius="10.dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/image_product"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginTop="8dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -32,35 +34,42 @@
                 android:id="@+id/button_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/favorite"
-                app:layout_constraintEnd_toEndOf="@+id/image_product"
-                app:layout_constraintTop_toTopOf="@+id/image_product"
+                app:layout_constraintEnd_toEndOf="@id/image_product"
+                app:layout_constraintTop_toTopOf="@id/image_product"
                 app:srcCompat="@drawable/ic_star" />
 
             <TextView
                 android:id="@+id/text_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text='@{String.format("%s ₺", productItem.price)}'
-                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/custom_green"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/image_product"
                 app:layout_constraintTop_toBottomOf="@+id/image_product" />
 
             <TextView
                 android:id="@+id/text_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@{productItem.name}"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@id/image_product"
                 app:layout_constraintTop_toBottomOf="@+id/text_price" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_addtocard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:text="@string/add_to_cart"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_name" />
+                android:textSize="12sp"
+                app:backgroundTint="@color/custom_green"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/image_product"
+                app:layout_constraintStart_toStartOf="@id/image_product"
+                app:layout_constraintTop_toBottomOf="@+id/text_name"  android:layout_height="40dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

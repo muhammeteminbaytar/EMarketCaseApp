@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.emarketcaseapp.databinding.FragmentHomeScreenBinding
 import com.example.emarketcaseapp.presentation.adapter.ProductAdapter
 import com.example.emarketcaseapp.presentation.viewmodel.HomeScreenViewModel
+import com.example.emarketcaseapp.util.GridSpacingItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class HomeScreenFragment : Fragment() {
@@ -30,7 +31,12 @@ class HomeScreenFragment : Fragment() {
 
         adapter = ProductAdapter()
         fragmentHomeBinding.rvHome.adapter = adapter
-        fragmentHomeBinding.rvHome.layoutManager = LinearLayoutManager(context)
+        fragmentHomeBinding.rvHome.layoutManager = GridLayoutManager(context, 2)
+
+        val spacingInPixels = 16
+        val includeEdge = true
+        fragmentHomeBinding.rvHome.addItemDecoration(GridSpacingItemDecoration(2, spacingInPixels, includeEdge))
+
 
         observeViewModel()
 
