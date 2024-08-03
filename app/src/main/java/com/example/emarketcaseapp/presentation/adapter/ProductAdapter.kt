@@ -3,6 +3,7 @@ package com.example.emarketcaseapp.presentation.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.emarketcaseapp.databinding.ProductItemViewBinding
 import com.example.emarketcaseapp.domain.model.Product
 import javax.inject.Singleton
@@ -32,6 +33,9 @@ class ProductAdapter : RecyclerView.Adapter<ProductViewHolder>() {
 class ProductViewHolder(private val binding: ProductItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(product: Product) {
         binding.productItem = product
+        Glide.with(binding.imageProduct.context)
+            .load(product.image)
+            .into(binding.imageProduct)
         binding.executePendingBindings()
     }
 }
