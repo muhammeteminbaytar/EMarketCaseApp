@@ -1,6 +1,5 @@
 package com.example.emarketcaseapp.domain.use_case.get_produckts
 
-import com.example.emarketcaseapp.R
 import com.example.emarketcaseapp.data.remote.dto.toListProduct
 import com.example.emarketcaseapp.domain.model.Product
 import com.example.emarketcaseapp.domain.repository.MarketRepository
@@ -15,7 +14,7 @@ class GetProductsUseCase @Inject constructor(private val repository: MarketRepos
         try {
             emit(Resource.Loading())
             val products = repository.getProducts()
-            if (products.Products.isNotEmpty())
+            if (products.toListProduct().isNotEmpty())
                 emit(Resource.Success(products.toListProduct()))
             else {
                 emit(Resource.Error("Product Not Found"))
