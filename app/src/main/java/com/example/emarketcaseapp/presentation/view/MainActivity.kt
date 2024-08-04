@@ -3,19 +3,22 @@ package com.example.emarketcaseapp.presentation.view
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.emarketcaseapp.R
 import com.example.emarketcaseapp.databinding.ActivityMainBinding
 import com.example.emarketcaseapp.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -29,9 +32,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(activityMainBinding.root)
 
         setSupportActionBar(activityMainBinding.appTopBar)
-/*
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-*/
         supportActionBar?.title = getString(R.string.emarket)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -45,13 +45,41 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         activityMainBinding.bottomBar.setupWithNavController(navController)
-    }
 
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            viewModel.updateMenuVisibility(destination.id)
+        }
+
+        lifecycleScope.launch {
+            viewModel.menuVisibility.collect { visibility ->
+                invalidateOptionsMenu()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.isBackButtonVisible.collect { isVisible ->
+                supportActionBar?.setDisplayHomeAsUpEnabled(isVisible)
+                if (isVisible) {
+                    onBackPressedDispatcher.addCallback(this@MainActivity) {
+                        navController.popBackStack()
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_bar_menu, menu)
         val searchItem = menu?.findItem(R.id.action_search)
+        val filterItem = menu?.findItem(R.id.action_filter)
         val searchView = searchItem?.actionView as SearchView
+
+        lifecycleScope.launch {
+            viewModel.menuVisibility.collect { visibility ->
+                searchItem?.isVisible = visibility.isSearchVisible
+                filterItem?.isVisible = visibility.isFilterVisible
+            }
+        }
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -70,7 +98,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                onBackPressedDispatcher.onBackPressed()
                 true
             }
             R.id.action_filter -> {
@@ -80,5 +108,4 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 }
