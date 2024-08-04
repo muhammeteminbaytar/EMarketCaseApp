@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 class HomeScreenFragment : Fragment(), OnProductClickListener {
 
     private lateinit var fragmentHomeBinding: FragmentHomeScreenBinding
-    private val viewModel: HomeScreenViewModel by viewModels()
+    val viewModel: HomeScreenViewModel by viewModels()
     private lateinit var adapter: ProductAdapter
 
     override fun onCreateView(
@@ -60,7 +60,7 @@ class HomeScreenFragment : Fragment(), OnProductClickListener {
 
     private fun observeViewModel() {
         lifecycleScope.launch {
-            viewModel.products.collect { products ->
+            viewModel.searchResults.collect { products ->
                 adapter.setItems(products)
                 fragmentHomeBinding.txtErrorMessage.visibility = View.GONE
             }

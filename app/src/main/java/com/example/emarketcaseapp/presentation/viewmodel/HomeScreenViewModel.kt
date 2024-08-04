@@ -29,6 +29,9 @@ class HomeScreenViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
+    private val _searchResults = MutableStateFlow<List<Product>>(emptyList())
+    val searchResults: StateFlow<List<Product>> = _searchResults
+
 
     fun getProducts() {
         job?.cancel()
@@ -39,6 +42,7 @@ class HomeScreenViewModel @Inject constructor(
                 is Resource.Success -> {
                     _isLoading.value = false
                     _products.value = result.data ?: emptyList()
+                    _searchResults.value = result.data ?: emptyList()
                 }
 
                 is Resource.Error -> {
@@ -51,6 +55,13 @@ class HomeScreenViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun searchProducts(query: String) {
+        val filteredList = _products.value.filter {
+            it.name.startsWith(query, ignoreCase = true)
+        }
+        _searchResults.value = filteredList
     }
 
 }

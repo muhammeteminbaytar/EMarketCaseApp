@@ -76,19 +76,27 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.menuVisibility.collect { visibility ->
-                searchItem?.isVisible = visibility.isSearchVisible
+                searchItem.isVisible = visibility.isSearchVisible
                 filterItem?.isVisible = visibility.isFilterVisible
             }
         }
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Search sorgusunu işle
+                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val fragment = navHostFragment.childFragmentManager.fragments[0] as? HomeScreenFragment
+                if (query != null) {
+                    fragment?.viewModel?.searchProducts(query)
+                }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Search sorgusu değiştiğinde işle
+                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val fragment = navHostFragment.childFragmentManager.fragments[0] as? HomeScreenFragment
+                if (newText != null) {
+                    fragment?.viewModel?.searchProducts(newText)
+                }
                 return false
             }
         })
