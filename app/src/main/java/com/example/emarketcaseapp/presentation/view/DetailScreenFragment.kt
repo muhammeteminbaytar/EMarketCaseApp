@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.example.emarketcaseapp.R
 import com.example.emarketcaseapp.databinding.FragmentDetailScreenBinding
 import com.example.emarketcaseapp.databinding.FragmentHomeScreenBinding
+import com.example.emarketcaseapp.domain.model.ProductDetail
 
 class DetailScreenFragment : Fragment() {
     private lateinit var fragmentDetailBinding: FragmentDetailScreenBinding
@@ -15,9 +16,11 @@ class DetailScreenFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         fragmentDetailBinding = FragmentDetailScreenBinding.inflate(inflater, container, false)
 
+        val args = DetailScreenFragmentArgs.fromBundle(requireArguments())
+        val productDetail = args.productDetail as ProductDetail
 
         return fragmentDetailBinding.root
     }

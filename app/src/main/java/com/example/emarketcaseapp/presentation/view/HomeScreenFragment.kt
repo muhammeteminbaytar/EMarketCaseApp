@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.emarketcaseapp.R
 import com.example.emarketcaseapp.databinding.FragmentHomeScreenBinding
 import com.example.emarketcaseapp.domain.model.Product
+import com.example.emarketcaseapp.domain.model.ProductDetail
 import com.example.emarketcaseapp.presentation.adapter.OnProductClickListener
 import com.example.emarketcaseapp.presentation.adapter.ProductAdapter
 import com.example.emarketcaseapp.presentation.viewmodel.HomeScreenViewModel
@@ -85,7 +88,18 @@ class HomeScreenFragment : Fragment(), OnProductClickListener {
     }
 
     override fun onProductClick(product: Product) {
-        println()
+        val productDetail = ProductDetail(
+            brand = product.brand,
+            createdAt = product.createdAt,
+            description = product.description,
+            id = product.id,
+            image = product.image,
+            model = product.model,
+            name = product.name,
+            price = product.price
+        )
+        val action = HomeScreenFragmentDirections.homeToDetail(productDetail)
+        findNavController().navigate(action)
     }
 
     override fun onFavoriteClick(product: Product) {
