@@ -9,6 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.emarketcaseapp.databinding.FragmentHomeScreenBinding
+import com.example.emarketcaseapp.domain.model.Product
+import com.example.emarketcaseapp.presentation.adapter.OnProductClickListener
 import com.example.emarketcaseapp.presentation.adapter.ProductAdapter
 import com.example.emarketcaseapp.presentation.viewmodel.HomeScreenViewModel
 import com.example.emarketcaseapp.util.GridSpacingItemDecoration
@@ -17,7 +19,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class HomeScreenFragment : Fragment() {
+class HomeScreenFragment : Fragment(), OnProductClickListener {
 
     private lateinit var fragmentHomeBinding: FragmentHomeScreenBinding
     private val viewModel: HomeScreenViewModel by viewModels()
@@ -29,13 +31,19 @@ class HomeScreenFragment : Fragment() {
     ): View {
         fragmentHomeBinding = FragmentHomeScreenBinding.inflate(inflater, container, false)
 
-        adapter = ProductAdapter()
+        adapter = ProductAdapter(this)
         fragmentHomeBinding.rvHome.adapter = adapter
         fragmentHomeBinding.rvHome.layoutManager = GridLayoutManager(context, 2)
 
         val spacingInPixels = 16
         val includeEdge = true
-        fragmentHomeBinding.rvHome.addItemDecoration(GridSpacingItemDecoration(2, spacingInPixels, includeEdge))
+        fragmentHomeBinding.rvHome.addItemDecoration(
+            GridSpacingItemDecoration(
+                2,
+                spacingInPixels,
+                includeEdge
+            )
+        )
 
 
         observeViewModel()
@@ -51,6 +59,7 @@ class HomeScreenFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.products.collect { products ->
                 adapter.setItems(products)
+                fragmentHomeBinding.txtErrorMessage.visibility = View.GONE
             }
         }
 
@@ -61,19 +70,29 @@ class HomeScreenFragment : Fragment() {
             }
         }
 
-        // Observe error messages
         lifecycleScope.launch {
             viewModel.errorMessage.collect { errorMessage ->
                 errorMessage?.let {
-                    /*
-                          fragmentHomeBinding.tvErrorMessage.text = it
-                          fragmentHomeBinding.tvErrorMessage.visibility = View.VISIBLE*/
+                    fragmentHomeBinding.txtErrorMessage.text = it
+                    fragmentHomeBinding.txtErrorMessage.visibility = View.VISIBLE
+
                 } ?: run {
-/*
-                    fragmentHomeBinding.tvErrorMessage.visibility = View.GONE
-*/
+                    fragmentHomeBinding.txtErrorMessage.visibility = View.GONE
+
                 }
             }
         }
+    }
+
+    override fun onProductClick(product: Product) {
+        println()
+    }
+
+    override fun onFavoriteClick(product: Product) {
+        println()
+    }
+
+    override fun onAddToCartClick(product: Product) {
+        println()
     }
 }

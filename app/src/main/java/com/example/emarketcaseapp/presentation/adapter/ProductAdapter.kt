@@ -9,7 +9,8 @@ import com.example.emarketcaseapp.domain.model.Product
 import javax.inject.Singleton
 
 @Singleton
-class ProductAdapter : RecyclerView.Adapter<ProductViewHolder>() {
+class ProductAdapter(private val listener: OnProductClickListener) :
+    RecyclerView.Adapter<ProductViewHolder>() {
 
     private var items: List<Product> = emptyList()
 
@@ -17,9 +18,11 @@ class ProductAdapter : RecyclerView.Adapter<ProductViewHolder>() {
         this.items = items
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val binding = ProductItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding)
+        val binding =
+            ProductItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProductViewHolder(binding, listener)
     }
 
     override fun getItemCount() = items.size
@@ -27,15 +30,29 @@ class ProductAdapter : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         holder.bind(items[position])
     }
-
 }
 
-class ProductViewHolder(private val binding: ProductItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
+class ProductViewHolder(
+    private val binding: ProductItemViewBinding,
+    private val listener: OnProductClickListener
+) :
+    RecyclerView.ViewHolder(binding.root) {
     fun bind(product: Product) {
         binding.productItem = product
         Glide.with(binding.imageProduct.context)
             .load(product.image)
             .into(binding.imageProduct)
+
+        binding.root.setOnClickListener {
+            listener.onProductClick(product)
+        }
+        binding.buttonFavorite.setOnClickListener {
+            listener.onFavoriteClick(product)
+        }
+        binding.btnAddtocard.setOnClickListener {
+            listener.onAddToCartClick(product)
+        }
+
         binding.executePendingBindings()
     }
 }
