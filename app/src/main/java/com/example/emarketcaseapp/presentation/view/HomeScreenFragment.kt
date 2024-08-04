@@ -101,7 +101,6 @@ class HomeScreenFragment : Fragment(), OnProductClickListener {
     }
 
     override fun onFavoriteClick(product: Product) {
-        println()
     }
 
     override fun onAddToCartClick(product: Product) {

@@ -4,20 +4,27 @@ import android.widget.RadioGroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.emarketcaseapp.R
+import com.example.emarketcaseapp.data.repository.FavoriteRepository
 import com.example.emarketcaseapp.domain.model.Product
 import com.example.emarketcaseapp.domain.use_case.get_produckts.GetProductsUseCase
+import com.example.emarketcaseapp.domain.use_case.toggle_favorite.ToggleFavoriteUseCase
 import com.example.emarketcaseapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    private val getProductsUseCase: GetProductsUseCase
+    private val getProductsUseCase: GetProductsUseCase,
+    private val favoriteRepository: FavoriteRepository,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
 ) : ViewModel() {
 
     private var job: Job? = null
@@ -37,6 +44,19 @@ class HomeScreenViewModel @Inject constructor(
     private val _selectedSortCriteria = MutableStateFlow<Int?>(null)
     val selectedSortCriteria: StateFlow<Int?> = _selectedSortCriteria
 
+    private val _favoriteProductIds = MutableStateFlow<List<Int>>(emptyList())
+    val favoriteProductIds: StateFlow<List<Int>> get() = _favoriteProductIds.asStateFlow()
+
+    init {
+        loadFavoriteProductIds()
+    }
+
+    /* private val _brands = MutableStateFlow<List<String>>(emptyList())
+     val brands: StateFlow<List<String>> = _brands
+
+     private val _models = MutableStateFlow<List<String>>(emptyList())
+     val models: StateFlow<List<String>> = _models*/
+
     private var currentSortCriteria: String? = null
 
 
@@ -50,6 +70,7 @@ class HomeScreenViewModel @Inject constructor(
                     _isLoading.value = false
                     _products.value = result.data ?: emptyList()
                     _searchResults.value = result.data ?: emptyList()
+//                    extractBrandsAndModels(result.data ?: emptyList())
                 }
 
                 is Resource.Error -> {
@@ -103,7 +124,33 @@ class HomeScreenViewModel @Inject constructor(
         _searchResults.value = sortedList
     }
 
+   /* private fun extractBrandsAndModels(products: List<Product>) {
+        _brands.value = products.map { it.brand }.distinct()
+        _models.value = products.map { it.model }.distinct()
+    }*/
+
+    private fun loadFavoriteProductIds() {
+        viewModelScope.launch {
+            favoriteRepository.getAllFavoriteIds()
+                .collect { ids ->
+                    _favoriteProductIds.value = ids
+                }
+        }
+    }
+
+    fun toggleFavorite(productId: Int) {
+        viewModelScope.launch {
+            toggleFavoriteUseCase(productId)
+            loadFavoriteProductIds()
+        }
+    }
+
+    fun isFavorite(productId: Int): Flow<Boolean> {
+        return favoriteRepository.isFavorite(productId)
+    }
+
     fun applyFilters() {
         currentSortCriteria?.let { filterProducts(it) }
     }
+
 }
