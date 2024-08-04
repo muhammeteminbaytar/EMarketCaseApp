@@ -9,19 +9,19 @@ import javax.inject.Inject
 class FavoriteRepository @Inject constructor(
     private val favoriteProductDao: FavoriteProductDao
 ) {
-    suspend fun addFavorite(productId: Int) {
+    suspend fun addFavorite(productId: String) {
         favoriteProductDao.insertFavoriteProduct(FavoriteProduct(productId))
     }
 
-    suspend fun removeFavorite(productId: Int) {
+    suspend fun removeFavorite(productId: String) {
         favoriteProductDao.deleteFavoriteProduct(FavoriteProduct(productId))
     }
 
-    fun isFavorite(productId: Int): Flow<Boolean> {
+    fun isFavorite(productId: String): Flow<Boolean> {
         return favoriteProductDao.getFavoriteProductById(productId).map { it != null }
     }
 
-    fun getAllFavoriteIds(): Flow<List<Int>> {
+    fun getAllFavoriteIds(): Flow<List<String>> {
         return favoriteProductDao.getAllFavoriteProductIds()
     }
 }

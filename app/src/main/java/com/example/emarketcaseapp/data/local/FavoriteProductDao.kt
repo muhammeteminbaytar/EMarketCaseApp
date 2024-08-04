@@ -17,8 +17,8 @@ interface FavoriteProductDao {
     suspend fun deleteFavoriteProduct(favoriteProduct: FavoriteProduct)
 
     @Query("SELECT * FROM favorite_products WHERE productId = :productId LIMIT 1")
-    fun getFavoriteProductById(productId: Int): Flow<FavoriteProduct?>
+    fun getFavoriteProductById(productId: String): Flow<FavoriteProduct?>
 
     @Query("SELECT productId FROM favorite_products")
-    fun getAllFavoriteProductIds(): Flow<List<Int>>
+    fun getAllFavoriteProductIds(): Flow<List<String>>
 }

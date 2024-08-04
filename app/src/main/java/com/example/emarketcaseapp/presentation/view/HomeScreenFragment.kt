@@ -7,11 +7,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.emarketcaseapp.R
 import com.example.emarketcaseapp.databinding.FragmentHomeScreenBinding
 import com.example.emarketcaseapp.domain.model.Product
 import com.example.emarketcaseapp.domain.model.ProductDetail
@@ -36,7 +34,7 @@ class HomeScreenFragment : Fragment(), OnProductClickListener {
     ): View {
         fragmentHomeBinding = FragmentHomeScreenBinding.inflate(inflater, container, false)
 
-        adapter = ProductAdapter(this)
+        adapter = ProductAdapter(viewModel,viewLifecycleOwner,this)
         fragmentHomeBinding.rvHome.adapter = adapter
         fragmentHomeBinding.rvHome.layoutManager = GridLayoutManager(context, 2)
 
@@ -101,6 +99,7 @@ class HomeScreenFragment : Fragment(), OnProductClickListener {
     }
 
     override fun onFavoriteClick(product: Product) {
+        viewModel.toggleFavorite(product.id)
     }
 
     override fun onAddToCartClick(product: Product) {

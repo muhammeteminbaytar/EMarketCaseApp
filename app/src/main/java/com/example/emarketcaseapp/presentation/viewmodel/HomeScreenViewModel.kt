@@ -44,8 +44,8 @@ class HomeScreenViewModel @Inject constructor(
     private val _selectedSortCriteria = MutableStateFlow<Int?>(null)
     val selectedSortCriteria: StateFlow<Int?> = _selectedSortCriteria
 
-    private val _favoriteProductIds = MutableStateFlow<List<Int>>(emptyList())
-    val favoriteProductIds: StateFlow<List<Int>> get() = _favoriteProductIds.asStateFlow()
+    private val _favoriteProductIds = MutableStateFlow<List<String>>(emptyList())
+    val favoriteProductIds: StateFlow<List<String>> get() = _favoriteProductIds.asStateFlow()
 
     init {
         loadFavoriteProductIds()
@@ -138,14 +138,14 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    fun toggleFavorite(productId: Int) {
+    fun toggleFavorite(productId: String) {
         viewModelScope.launch {
             toggleFavoriteUseCase(productId)
             loadFavoriteProductIds()
         }
     }
 
-    fun isFavorite(productId: Int): Flow<Boolean> {
+    fun isFavorite(productId: String): Flow<Boolean> {
         return favoriteRepository.isFavorite(productId)
     }
 
