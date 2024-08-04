@@ -110,10 +110,19 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_filter -> {
-                // Filter işlemi için gerekli kodu ekle
+                showFilterDialog()
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showFilterDialog() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val fragment = navHostFragment.childFragmentManager.fragments[0] as? HomeScreenFragment
+        if (fragment != null) {
+            val dialog = FilterDialog()
+            dialog.show(supportFragmentManager, "FilterDialog")
         }
     }
 }

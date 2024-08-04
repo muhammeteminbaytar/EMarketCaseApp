@@ -1,7 +1,9 @@
 package com.example.emarketcaseapp.presentation.viewmodel
 
+import android.widget.RadioGroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.emarketcaseapp.R
 import com.example.emarketcaseapp.domain.model.Product
 import com.example.emarketcaseapp.domain.use_case.get_produckts.GetProductsUseCase
 import com.example.emarketcaseapp.util.Resource
@@ -31,6 +33,11 @@ class HomeScreenViewModel @Inject constructor(
 
     private val _searchResults = MutableStateFlow<List<Product>>(emptyList())
     val searchResults: StateFlow<List<Product>> = _searchResults
+
+    private val _selectedSortCriteria = MutableStateFlow<Int?>(null)
+    val selectedSortCriteria: StateFlow<Int?> = _selectedSortCriteria
+
+    private var currentSortCriteria: String? = null
 
 
     fun getProducts() {
@@ -64,4 +71,39 @@ class HomeScreenViewModel @Inject constructor(
         _searchResults.value = filteredList
     }
 
+    fun onSortCriteriaChanged(checkedId: Int) {
+        _selectedSortCriteria.value = checkedId
+        currentSortCriteria = when(checkedId) {
+            R.id.rb_olt_to_new -> "date_asc"
+            R.id.rb_new_to_old -> "date_desc"
+            R.id.rb_price_low_to_high -> "price_asc"
+            R.id.rb_price_high_to_low -> "price_desc"
+            else -> null
+        }
+    }
+    val onCheckedChangeListener = RadioGroup.OnCheckedChangeListener { group, checkedId ->
+        _selectedSortCriteria.value = checkedId
+        currentSortCriteria = when (checkedId) {
+            R.id.rb_olt_to_new -> "date_asc"
+            R.id.rb_new_to_old -> "date_desc"
+            R.id.rb_price_low_to_high -> "price_asc"
+            R.id.rb_price_high_to_low -> "price_desc"
+            else -> null
+        }
+    }
+
+    fun filterProducts(criteria: String) {
+        val sortedList = when(criteria) {
+            "date_asc" -> _searchResults.value.sortedBy { it.createdAt }
+            "date_desc" -> _searchResults.value.sortedByDescending { it.createdAt }
+            "price_asc" -> _searchResults.value.sortedBy { it.price.toDoubleOrNull() }
+            "price_desc" -> _searchResults.value.sortedByDescending { it.price.toDoubleOrNull() }
+            else -> _searchResults.value
+        }
+        _searchResults.value = sortedList
+    }
+
+    fun applyFilters() {
+        currentSortCriteria?.let { filterProducts(it) }
+    }
 }

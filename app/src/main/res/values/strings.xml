@@ -8,4 +8,12 @@
     <string name="add_to_cart">Add To Cart</string>
     <string name="price">Price : </string>
     <string name="emarket">E - MARKET</string>
+    <string name="filter">Filter</string>
+    <string name="old_to_new">Old to new</string>
+    <string name="new_to_old">New to old</string>
+    <string name="price_high_to_low">Price high to low </string>
+    <string name="price_low_to_high">Price low to high</string>
+    <string name="sort_by">Sort by</string>
+    <string name="primary">Primary</string>
+
 </resources>

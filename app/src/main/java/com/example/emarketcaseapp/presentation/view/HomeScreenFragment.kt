@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,7 +27,7 @@ import kotlinx.coroutines.launch
 class HomeScreenFragment : Fragment(), OnProductClickListener {
 
     private lateinit var fragmentHomeBinding: FragmentHomeScreenBinding
-    val viewModel: HomeScreenViewModel by viewModels()
+    val viewModel: HomeScreenViewModel by activityViewModels()
     private lateinit var adapter: ProductAdapter
 
     override fun onCreateView(
@@ -62,7 +64,6 @@ class HomeScreenFragment : Fragment(), OnProductClickListener {
         lifecycleScope.launch {
             viewModel.searchResults.collect { products ->
                 adapter.setItems(products)
-                fragmentHomeBinding.txtErrorMessage.visibility = View.GONE
             }
         }
 
@@ -76,11 +77,8 @@ class HomeScreenFragment : Fragment(), OnProductClickListener {
         lifecycleScope.launch {
             viewModel.errorMessage.collect { errorMessage ->
                 errorMessage?.let {
-                    fragmentHomeBinding.txtErrorMessage.text = it
-                    fragmentHomeBinding.txtErrorMessage.visibility = View.VISIBLE
-
+                    Toast.makeText(context, it, Toast.LENGTH_LONG).show()
                 } ?: run {
-                    fragmentHomeBinding.txtErrorMessage.visibility = View.GONE
 
                 }
             }
