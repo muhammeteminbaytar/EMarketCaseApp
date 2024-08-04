@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.example.emarketcaseapp.R
 import com.example.emarketcaseapp.databinding.FragmentDetailScreenBinding
 import com.example.emarketcaseapp.databinding.FragmentHomeScreenBinding
@@ -18,9 +19,15 @@ class DetailScreenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         fragmentDetailBinding = FragmentDetailScreenBinding.inflate(inflater, container, false)
-
         val args = DetailScreenFragmentArgs.fromBundle(requireArguments())
-        val productDetail = args.productDetail as ProductDetail
+
+        val productDetail = args.productDetail
+
+        fragmentDetailBinding.detailFragment = productDetail
+
+        Glide.with(fragmentDetailBinding.detailImage.context)
+            .load(productDetail.image)
+            .into(fragmentDetailBinding.detailImage)
 
         return fragmentDetailBinding.root
     }
