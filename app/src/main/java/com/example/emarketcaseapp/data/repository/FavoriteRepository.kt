@@ -24,4 +24,7 @@ class FavoriteRepository @Inject constructor(
     fun getAllFavoriteIds(): Flow<List<String>> {
         return favoriteProductDao.getAllFavoriteProductIds()
     }
+    fun getFavoriteCount(): Flow<Int>{
+        return favoriteProductDao.getFavoriteProductCount()
+    }
 }

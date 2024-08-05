@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.emarketcaseapp.R
 import com.example.emarketcaseapp.databinding.ActivityMainBinding
 import com.example.emarketcaseapp.presentation.viewmodel.MainViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            viewModel.menuVisibility.collect { visibility ->
+            viewModel.menuVisibility.collect {
                 invalidateOptionsMenu()
             }
         }
@@ -65,6 +66,21 @@ class MainActivity : AppCompatActivity() {
                         navController.popBackStack()
                     }
                 }
+            }
+        }
+
+        setupBadge()
+    }
+
+    private fun setupBadge() {
+
+        val menuItemId = R.id.favoriteScreen
+
+        val badge = activityMainBinding.bottomBar.getOrCreateBadge(menuItemId)
+        badge.isVisible = true
+        lifecycleScope.launch{
+            viewModel.favoriteCount.collect{
+                badge.number = it
             }
         }
     }
