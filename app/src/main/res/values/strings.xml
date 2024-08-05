@@ -15,5 +15,6 @@
     <string name="price_low_to_high">Price low to high</string>
     <string name="sort_by">Sort by</string>
     <string name="primary">Primary</string>
+    <string name="added">Added</string>
 
 </resources>

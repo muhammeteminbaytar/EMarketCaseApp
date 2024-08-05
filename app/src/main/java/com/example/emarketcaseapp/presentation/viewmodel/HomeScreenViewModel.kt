@@ -4,6 +4,7 @@ import android.widget.RadioGroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.emarketcaseapp.R
+import com.example.emarketcaseapp.data.repository.CartRepository
 import com.example.emarketcaseapp.data.repository.FavoriteRepository
 import com.example.emarketcaseapp.domain.model.Product
 import com.example.emarketcaseapp.domain.use_case.get_produckts.GetProductsUseCase
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase,
     private val favoriteRepository: FavoriteRepository,
-    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    private val cartRepository: CartRepository
 ) : ViewModel() {
 
     private var job: Job? = null
@@ -94,7 +96,7 @@ class HomeScreenViewModel @Inject constructor(
 
     fun onSortCriteriaChanged(checkedId: Int) {
         _selectedSortCriteria.value = checkedId
-        currentSortCriteria = when(checkedId) {
+        currentSortCriteria = when (checkedId) {
             R.id.rb_olt_to_new -> "date_asc"
             R.id.rb_new_to_old -> "date_desc"
             R.id.rb_price_low_to_high -> "price_asc"
@@ -102,6 +104,7 @@ class HomeScreenViewModel @Inject constructor(
             else -> null
         }
     }
+
     val onCheckedChangeListener = RadioGroup.OnCheckedChangeListener { group, checkedId ->
         _selectedSortCriteria.value = checkedId
         currentSortCriteria = when (checkedId) {
@@ -114,7 +117,7 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun filterProducts(criteria: String) {
-        val sortedList = when(criteria) {
+        val sortedList = when (criteria) {
             "date_asc" -> _searchResults.value.sortedBy { it.createdAt }
             "date_desc" -> _searchResults.value.sortedByDescending { it.createdAt }
             "price_asc" -> _searchResults.value.sortedBy { it.price.toDoubleOrNull() }
@@ -124,10 +127,10 @@ class HomeScreenViewModel @Inject constructor(
         _searchResults.value = sortedList
     }
 
-   /* private fun extractBrandsAndModels(products: List<Product>) {
-        _brands.value = products.map { it.brand }.distinct()
-        _models.value = products.map { it.model }.distinct()
-    }*/
+    /* private fun extractBrandsAndModels(products: List<Product>) {
+         _brands.value = products.map { it.brand }.distinct()
+         _models.value = products.map { it.model }.distinct()
+     }*/
 
     private fun loadFavoriteProductIds() {
         viewModelScope.launch {
@@ -151,6 +154,12 @@ class HomeScreenViewModel @Inject constructor(
 
     fun applyFilters() {
         currentSortCriteria?.let { filterProducts(it) }
+    }
+
+    fun updateCartProduct(productId: String, increase: Boolean) {
+        viewModelScope.launch {
+            cartRepository.updateCartProduct(productId, increase)
+        }
     }
 
 }

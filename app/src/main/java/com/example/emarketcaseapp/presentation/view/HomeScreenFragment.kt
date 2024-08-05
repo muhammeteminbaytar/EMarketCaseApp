@@ -35,7 +35,7 @@ class HomeScreenFragment : Fragment(), OnProductClickListener {
     ): View {
         fragmentHomeBinding = FragmentHomeScreenBinding.inflate(inflater, container, false)
 
-        adapter = ProductAdapter(viewModel,viewLifecycleOwner,this)
+        adapter = ProductAdapter(viewModel, viewLifecycleOwner, this)
         fragmentHomeBinding.rvHome.adapter = adapter
         fragmentHomeBinding.rvHome.layoutManager = GridLayoutManager(context, 2)
 
@@ -86,8 +86,8 @@ class HomeScreenFragment : Fragment(), OnProductClickListener {
 
     override fun onProductClick(product: Product) {
         var mIsFavorite = false
-        viewLifecycleOwner.lifecycleScope.launch{
-            viewModel.favoriteProductIds.collect{favoriteIds ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.favoriteProductIds.collect { favoriteIds ->
                 mIsFavorite = favoriteIds.contains(product.id)
             }
         }
@@ -112,6 +112,7 @@ class HomeScreenFragment : Fragment(), OnProductClickListener {
     }
 
     override fun onAddToCartClick(product: Product) {
-        println()
+        viewModel.updateCartProduct(product.id, true)
+        Toast.makeText(context, product.name + " " + getString(R.string.added), Toast.LENGTH_SHORT).show()
     }
 }

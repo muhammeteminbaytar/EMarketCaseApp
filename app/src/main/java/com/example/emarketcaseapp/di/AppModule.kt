@@ -3,8 +3,10 @@ package com.example.emarketcaseapp.di
 import android.content.Context
 import androidx.room.Room
 import com.example.emarketcaseapp.data.local.AppDatabase
+import com.example.emarketcaseapp.data.local.CartProductDao
 import com.example.emarketcaseapp.data.local.FavoriteProductDao
 import com.example.emarketcaseapp.data.remote.MarketAPI
+import com.example.emarketcaseapp.data.repository.CartRepository
 import com.example.emarketcaseapp.data.repository.FavoriteRepository
 import com.example.emarketcaseapp.data.repository.MarketRepositoryImpl
 import com.example.emarketcaseapp.domain.repository.MarketRepository
@@ -62,5 +64,16 @@ object AppModule {
     @Singleton
     fun provideToggleFavoriteUseCase(repository: FavoriteRepository): ToggleFavoriteUseCase {
         return ToggleFavoriteUseCase(repository)
+    }
+
+    @Provides
+    fun provideCartProductDao(database: AppDatabase): CartProductDao {
+        return database.cartProductDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCrtRepository(dao: CartProductDao): CartRepository {
+        return CartRepository(dao)
     }
 }
