@@ -16,5 +16,7 @@
     <string name="sort_by">Sort by</string>
     <string name="primary">Primary</string>
     <string name="added">Added</string>
+    <string name="total">Total : </string>
+    <string name="complete">Complete</string>
 
 </resources>

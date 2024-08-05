@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -49,6 +50,11 @@ class DetailScreenFragment : Fragment() {
         }
 
         (requireActivity() as MainActivity).updateTitle(productDetail.name)
+
+        fragmentDetailBinding.btnDetailAddToCard.setOnClickListener {
+            viewModel.updateCartProduct(productDetail.id, true)
+            Toast.makeText(context, productDetail.name + " " + getString(R.string.added), Toast.LENGTH_SHORT).show()
+        }
 
         return fragmentDetailBinding.root
     }
