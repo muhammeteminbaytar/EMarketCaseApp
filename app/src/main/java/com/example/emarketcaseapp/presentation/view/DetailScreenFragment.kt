@@ -48,7 +48,7 @@ class DetailScreenFragment : Fragment() {
             }
         }
 
-
+        (requireActivity() as MainActivity).updateTitle(productDetail.name)
 
         return fragmentDetailBinding.root
     }

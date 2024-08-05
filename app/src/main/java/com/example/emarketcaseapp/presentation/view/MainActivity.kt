@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.setDisplayHomeAsUpEnabled(isVisible)
                 if (isVisible) {
                     onBackPressedDispatcher.addCallback(this@MainActivity) {
+                        supportActionBar?.title = getString(R.string.emarket)
                         navController.popBackStack()
                     }
                 }
@@ -125,4 +126,8 @@ class MainActivity : AppCompatActivity() {
             dialog.show(supportFragmentManager, "FilterDialog")
         }
     }
+    fun updateTitle(title: String) {
+        supportActionBar?.title = title
+    }
+
 }
