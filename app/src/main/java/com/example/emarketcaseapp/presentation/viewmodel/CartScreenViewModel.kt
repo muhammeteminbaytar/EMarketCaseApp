@@ -75,7 +75,7 @@ class CartScreenViewModel @Inject constructor(
         }
     }
 
-    private fun calculateTotalValue(cartModelList: List<CartModel>) {
+    fun calculateTotalValue(cartModelList: List<CartModel>) {
         val total = cartModelList.fold(0.0) { acc, cartModel ->
             val price = cartModel.product.price.toDoubleOrNull() ?: 0.0
             val quantity = cartModel.piece.toIntOrNull() ?: 0
@@ -104,6 +104,8 @@ class CartScreenViewModel @Inject constructor(
                 is Resource.Loading -> {
                     _isLoading.value = true
                 }
+
+                else -> {}
             }
         }.launchIn(viewModelScope)
     }

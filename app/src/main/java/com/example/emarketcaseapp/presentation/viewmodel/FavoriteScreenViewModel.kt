@@ -72,7 +72,7 @@ class FavoriteScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun loadFavoriteProductIds() {
+    fun loadFavoriteProductIds() {
         viewModelScope.launch {
             favoriteRepository.getAllFavoriteIds()
                 .collect { ids ->

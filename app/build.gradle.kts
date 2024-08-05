@@ -73,19 +73,29 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
 
-    implementation (libs.androidx.activity.ktx)
-    implementation (libs.androidx.fragment.ktx)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.fragment.ktx)
 
     // Navigation Component
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
-    implementation (libs.material.v1120)
+    implementation(libs.material.v1120)
 
-    implementation (libs.glide)
+    implementation(libs.glide)
 
-    implementation (libs.androidx.room.runtime)
-    kapt (libs.androidx.room.compiler)
+    implementation(libs.androidx.room.runtime)
+
+    testImplementation(libs.androidx.core.v140)
+    testImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.runner)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockk.android)
+
+    // Coroutine Test
+    testImplementation(libs.kotlinx.coroutines.test)
 
 }
 
