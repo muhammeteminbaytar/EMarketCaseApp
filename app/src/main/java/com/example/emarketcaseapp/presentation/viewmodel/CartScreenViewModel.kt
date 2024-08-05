@@ -23,7 +23,7 @@ class CartScreenViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase,
     private val cartRepository: CartRepository
 
-    ) : ViewModel() {
+) : ViewModel() {
     private var job: Job? = null
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products: StateFlow<List<Product>> = _products
@@ -39,6 +39,9 @@ class CartScreenViewModel @Inject constructor(
 
     private val _filteredProducts = MutableStateFlow<List<CartModel>>(emptyList())
     val filteredProducts: StateFlow<List<CartModel>> get() = _filteredProducts
+
+    private val _totalValue = MutableStateFlow(0.0)
+    val totalValue: StateFlow<Double> get() = _totalValue
 
     init {
         observeCartProducts()
@@ -61,6 +64,7 @@ class CartScreenViewModel @Inject constructor(
             }
         }.onEach { cartModelList ->
             _filteredProducts.value = cartModelList
+            calculateTotalValue(cartModelList)
         }.launchIn(viewModelScope)
     }
 
@@ -69,6 +73,15 @@ class CartScreenViewModel @Inject constructor(
             cartRepository.updateCartProduct(productId, increase)
             loadCartProducts()
         }
+    }
+
+    private fun calculateTotalValue(cartModelList: List<CartModel>) {
+        val total = cartModelList.fold(0.0) { acc, cartModel ->
+            val price = cartModel.product.price.toDoubleOrNull() ?: 0.0
+            val quantity = cartModel.piece.toIntOrNull() ?: 0
+            acc + (price * quantity)
+        }
+        _totalValue.value = total
     }
 
 
@@ -94,7 +107,6 @@ class CartScreenViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
-
 
 
 }

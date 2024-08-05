@@ -53,6 +53,11 @@ class CartScreenFragment : Fragment(), OnCartClickListener {
                 adapter.setItems(it)
             }
         }
+        lifecycleScope.launch {
+            viewModel.totalValue.collect{
+                fragmentCartBinding.txtTotalPrice.text = it.toString()
+            }
+        }
     }
 
     override fun onMinusClick(cart: CartModel) {
