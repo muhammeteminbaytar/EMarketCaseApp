@@ -93,6 +93,7 @@ dependencies {
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.android)
+    kapt(libs.androidx.room.compiler)
 
     // Coroutine Test
     testImplementation(libs.kotlinx.coroutines.test)
