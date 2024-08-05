@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CartProductDao {
@@ -23,4 +24,7 @@ interface CartProductDao {
 
     @Query("SELECT * FROM cart_products")
     suspend fun getAllCartProducts(): List<CartProduct>
+
+    @Query("SELECT COALESCE(SUM(quantity), 0) FROM cart_products")
+    fun getTotalItemCountFlow(): Flow<Int>
 }

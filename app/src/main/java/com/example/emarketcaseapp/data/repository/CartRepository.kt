@@ -2,6 +2,7 @@ package com.example.emarketcaseapp.data.repository
 
 import com.example.emarketcaseapp.data.local.CartProduct
 import com.example.emarketcaseapp.data.local.CartProductDao
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CartRepository @Inject constructor(
@@ -32,5 +33,9 @@ class CartRepository @Inject constructor(
 
     suspend fun getAllCartProducts(): List<CartProduct> {
         return cartProductDao.getAllCartProducts()
+    }
+
+    fun getAllPiecesCount(): Flow<Int>{
+        return cartProductDao.getTotalItemCountFlow()
     }
 }

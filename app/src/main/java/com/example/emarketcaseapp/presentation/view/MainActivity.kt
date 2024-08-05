@@ -16,9 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.emarketcaseapp.R
 import com.example.emarketcaseapp.databinding.ActivityMainBinding
 import com.example.emarketcaseapp.presentation.viewmodel.MainViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -74,15 +72,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBadge() {
 
-        val menuItemId = R.id.favoriteScreen
-
-        val badge = activityMainBinding.bottomBar.getOrCreateBadge(menuItemId)
-        badge.isVisible = true
-        lifecycleScope.launch{
-            viewModel.favoriteCount.collect{
-                badge.number = it
+        val menuFavoriteItemId = R.id.favoriteScreen
+        val badgeFavorite = activityMainBinding.bottomBar.getOrCreateBadge(menuFavoriteItemId)
+        badgeFavorite.isVisible = true
+        badgeFavorite.verticalOffset = 20
+        lifecycleScope.launch {
+            viewModel.favoriteCount.collect {
+                badgeFavorite.number = it
             }
         }
+
+        val menuCartItemId = R.id.cartScreen
+        val badgeCart = activityMainBinding.bottomBar.getOrCreateBadge(menuCartItemId)
+        badgeCart.isVisible = true
+        badgeCart.verticalOffset = 20
+        lifecycleScope.launch {
+            viewModel.cartCount.collect {
+                badgeCart.number = it
+            }
+        }
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -100,8 +110,10 @@ class MainActivity : AppCompatActivity() {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-                val fragment = navHostFragment.childFragmentManager.fragments[0] as? HomeScreenFragment
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val fragment =
+                    navHostFragment.childFragmentManager.fragments[0] as? HomeScreenFragment
                 if (query != null) {
                     fragment?.viewModel?.searchProducts(query)
                 }
@@ -109,8 +121,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-                val fragment = navHostFragment.childFragmentManager.fragments[0] as? HomeScreenFragment
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val fragment =
+                    navHostFragment.childFragmentManager.fragments[0] as? HomeScreenFragment
                 if (newText != null) {
                     fragment?.viewModel?.searchProducts(newText)
                 }
@@ -126,22 +140,26 @@ class MainActivity : AppCompatActivity() {
                 onBackPressedDispatcher.onBackPressed()
                 true
             }
+
             R.id.action_filter -> {
                 showFilterDialog()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun showFilterDialog() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val fragment = navHostFragment.childFragmentManager.fragments[0] as? HomeScreenFragment
         if (fragment != null) {
             val dialog = FilterDialog()
             dialog.show(supportFragmentManager, "FilterDialog")
         }
     }
+
     fun updateTitle(title: String) {
         supportActionBar?.title = title
     }
