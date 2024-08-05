@@ -11,13 +11,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.emarketcaseapp.databinding.FragmentCartScreenBinding
+import com.example.emarketcaseapp.domain.model.CartModel
 import com.example.emarketcaseapp.presentation.adapter.CartAdapter
+import com.example.emarketcaseapp.presentation.adapter.OnCartClickListener
 import com.example.emarketcaseapp.presentation.adapter.ProductAdapter
 import com.example.emarketcaseapp.presentation.viewmodel.CartScreenViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class CartScreenFragment : Fragment() {
+class CartScreenFragment : Fragment(), OnCartClickListener {
     private lateinit var fragmentCartBinding: FragmentCartScreenBinding
     private val viewModel : CartScreenViewModel by activityViewModels()
     private lateinit var adapter: CartAdapter
@@ -28,7 +30,7 @@ class CartScreenFragment : Fragment() {
     ): View {
         fragmentCartBinding = FragmentCartScreenBinding.inflate(inflater, container, false)
 
-        adapter = CartAdapter()
+        adapter = CartAdapter(this)
         fragmentCartBinding.rvCart.adapter = adapter
         fragmentCartBinding.rvCart.layoutManager = LinearLayoutManager(context)
 
@@ -51,5 +53,13 @@ class CartScreenFragment : Fragment() {
                 adapter.setItems(it)
             }
         }
+    }
+
+    override fun onMinusClick(cart: CartModel) {
+        viewModel.updateCartProduct(cart.product.id, false)
+    }
+
+    override fun onPlusClick(cart: CartModel) {
+        viewModel.updateCartProduct(cart.product.id, true)
     }
 }

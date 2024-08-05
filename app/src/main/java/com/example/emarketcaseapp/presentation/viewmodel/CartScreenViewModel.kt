@@ -41,7 +41,6 @@ class CartScreenViewModel @Inject constructor(
     val filteredProducts: StateFlow<List<CartModel>> get() = _filteredProducts
 
     init {
-        loadCartProducts()
         observeCartProducts()
     }
 
@@ -52,7 +51,7 @@ class CartScreenViewModel @Inject constructor(
         }
     }
 
-    fun observeCartProducts() {
+    private fun observeCartProducts() {
         cartProducts.combine(products) { cartProducts, allProducts ->
             cartProducts.mapNotNull { cartProduct ->
                 val product = allProducts.find { it.id == cartProduct.productId }

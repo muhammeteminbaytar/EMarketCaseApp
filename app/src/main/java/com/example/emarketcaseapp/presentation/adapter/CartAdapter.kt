@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CartAdapter(
-
+    private val listener: OnCartClickListener
 ) :  RecyclerView.Adapter<CartViewHolder>(){
 
     private var items: List<CartModel> = emptyList()
@@ -22,7 +22,7 @@ class CartAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val binding =
             CartItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartViewHolder(binding)
+        return CartViewHolder(binding, listener)
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
@@ -34,8 +34,17 @@ class CartAdapter(
 
 class CartViewHolder(
     private val binding: CartItemViewBinding,
+    private val listener: OnCartClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(cartModel: CartModel){
         binding.cartItem = cartModel
+
+        binding.btnMinus.setOnClickListener {
+            listener.onMinusClick(cartModel)
+        }
+
+        binding.btnPlus.setOnClickListener {
+            listener.onPlusClick(cartModel)
+        }
     }
 }
