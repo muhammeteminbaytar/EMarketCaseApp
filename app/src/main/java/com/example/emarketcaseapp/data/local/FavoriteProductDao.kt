@@ -16,8 +16,8 @@ interface FavoriteProductDao {
     @Delete
     suspend fun deleteFavoriteProduct(favoriteProduct: FavoriteProduct)
 
-    @Query("SELECT * FROM favorite_products WHERE productId = :productId LIMIT 1")
-    fun getFavoriteProductById(productId: String): Flow<FavoriteProduct?>
+    @Query("SELECT EXISTS(SELECT 1 FROM favorite_products WHERE productId = :productId)")
+    fun isFavorite(productId: String): Flow<Boolean>
 
     @Query("SELECT productId FROM favorite_products")
     fun getAllFavoriteProductIds(): Flow<List<String>>

@@ -37,9 +37,10 @@
                     tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
                 <ImageButton
-                    android:id="@+id/detailFavorite"
+                    android:id="@+id/imgFavorite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
                     app:layout_constraintEnd_toEndOf="@+id/detailImage"
                     app:layout_constraintTop_toTopOf="@id/detailImage"
                     app:srcCompat="@drawable/ic_star" />

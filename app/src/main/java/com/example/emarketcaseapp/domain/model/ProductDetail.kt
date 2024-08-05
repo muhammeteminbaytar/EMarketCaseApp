@@ -10,5 +10,6 @@ class ProductDetail (
     val image: String,
     val model: String,
     val name: String,
-    val price: String
+    val price: String,
+    val isFavorite : Boolean
 ) : Serializable
